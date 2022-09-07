@@ -27,6 +27,7 @@
 import logo from "../assets/logo.jpg";
 import FileBrowse from "../components/FileBrowse.vue"
 import AlikhHome from "../components/AlikhHome.vue"
+import UploadFile from "@/components/UploadPage.vue";
 
 export default {
   data() {
@@ -37,7 +38,8 @@ export default {
   },
   components:{
     "FileBrowse":FileBrowse,
-    "AlikhHome": AlikhHome
+    "AlikhHome": AlikhHome,
+    "UploadFile": UploadFile
   },
   methods:{
     changeComponent(event, compName){
