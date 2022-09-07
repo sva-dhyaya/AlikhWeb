@@ -20,8 +20,9 @@ export default {
   created(){
     if (alikhUtils.getCookieValue("userId")){
       this.$router.push({"name":"alikh"})
+    }else{
+      this.showLogin = true
     }
-    this.showLogin = true
   }
 
 };

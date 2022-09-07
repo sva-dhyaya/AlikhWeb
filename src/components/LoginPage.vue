@@ -112,8 +112,8 @@ export default {
         this.logInToServer({username: this.username, password: this.password}).then((data)=>{
           if (data.httpSuccess){
             Utils.successToast(`Logging in ${this.username}`)
-            this.closeLoginForm()
-            this.$router.push({name:"alikh"})
+            // this.closeLoginForm()
+            this.$router.push({"name":"alikh"})
           }else{
             Utils.failToast(data.errors?typeof(data.errors)=="string"?data.errors:data.errors[0]:`Failed to Login`)
           }

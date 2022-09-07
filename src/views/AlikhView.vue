@@ -11,7 +11,7 @@
             <li :class="{activePanel: selectedComponent == 'ReviewFile'}" @click="changeComponent($event,'ReviewFile')">Status</li>
             <li :class="{activePanel: selectedComponent == 'AlikhSettings'}" @click="changeComponent($event,'AlikhSettings')">Settings</li>
             <li :class="{activePanel: selectedComponent == 'BinPage'}" @click="changeComponent($event,'BinPage')">Bin</li>
-            <li :class="{activePanel: selectedComponent == 'Logout'}" @click="changeComponent($event,'Logout')">Log Out</li>
+            <li :class="{activePanel: selectedComponent == 'Logout'}" @click="logout($event,'Logout')">Log Out</li>
           </ul>
         </div>
       </div>
@@ -28,6 +28,8 @@ import logo from "../assets/logo.jpg";
 import FileBrowse from "../components/FileBrowse.vue"
 import AlikhHome from "../components/AlikhHome.vue"
 import UploadFile from "@/components/UploadPage.vue";
+import alikhUtils from '@/alikh.utils';
+import ReviewFile from "@/components/ReviewFile.vue";
 
 export default {
   data() {
@@ -39,7 +41,8 @@ export default {
   components:{
     "FileBrowse":FileBrowse,
     "AlikhHome": AlikhHome,
-    "UploadFile": UploadFile
+    "UploadFile": UploadFile,
+    "ReviewFile": ReviewFile
   },
   methods:{
     changeComponent(event, compName){
@@ -47,6 +50,13 @@ export default {
         event.stopImmediatePropagation()
       }
       this.selectedComponent = compName
+    },
+    logout(event){
+      if (event != null){
+        event.stopImmediatePropagation()
+      }
+      alikhUtils.unsetLoginCookie()
+      this.$router.push({"name":"home"})
     }
   }
 };
