@@ -8,4 +8,9 @@ export default {
         return resp
     },
 
+    async updateFile(context, payload) {
+        let resp = await requesthandler.put(`${alikhConstants.filesUrl}/${payload._id}`, payload)
+        return resp
+    },
+
 }

@@ -28,7 +28,11 @@ export default {
     getCookieValue(cookieKey) {
         let val = cookies.get(cookieKey)
         if (cookieKey == "userInfo") {
-            val = JSON.parse(val);
+            try {
+                val = JSON.parse(val);                
+            } catch (error) {
+                console.warn(`Error While Parsing-->${error}`)
+            }
         }
         return val
     },
