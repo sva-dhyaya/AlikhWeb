@@ -18,12 +18,249 @@
               </div>
               <button class="btn mt-10">Browse</button>
               <br />
-              <button class="btn mt-10" @click="openReviewWindow">
-                Submit for Review
-              </button>
               <br />
-              <button class="btn mt-10">Cancel</button>
+              <br />
+              <v-dialog
+                v-model="dialog"
+                fullscreen
+                :scrim="false"
+                transition="dialog-bottom-transition"
+              >
+                <template v-slot:activator="{ props }">
+                  <v-btn color="primary" dark v-bind="props">
+                    Submit for Review
+                  </v-btn>
+                </template>
+                <v-card>
+                  <v-toolbar dark color="primary">
+                    <v-btn icon dark @click="dialog = false">
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title>Review Window</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-toolbar-items>
+                      <v-btn dark text @click="saveUploadedFile"> Save </v-btn>
+                    </v-toolbar-items>
+                    <v-toolbar-items>
+                      <v-btn dark text @click="dsicardUploadedFile">
+                        Discard
+                      </v-btn>
+                    </v-toolbar-items>
+                  </v-toolbar>
 
+                  <v-form ref="reviewForm">
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12" md="4">
+                            <div class="user_details">
+                    <img
+                      class="img-width"
+                      :src="alikhUtils.getFileServeUrl('/___.ai')"
+                    />
+                    <div class="user_details_cnt">
+                      File Name : <br />
+                      Date and Time: <br />
+                      Uploaded User: <br />
+                    </div>
+                  </div>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-textarea
+                            v-model="metadata.description"
+                            label="Description"
+                            filled
+                            readonly
+                          ></v-textarea>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.category.value"
+                            label="Category"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.industry_type.value"
+                            label="Industry"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="isCharacter.value"
+                            label="With Character"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.character_info.primary.value"
+                            label="Primary Character"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.character_info.secondary.value"
+                            label="Secondary Character"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.langauge.value"
+                            label="Language"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.location.value"
+                            label="Location"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.age.value"
+                            label="Age"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.ethnicity.value"
+                            label="Ethnicity"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.look.value"
+                            label="Look"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.continental.value"
+                            label="Continental"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.bg_color.value"
+                            label="BG Colours"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.emojis.value"
+                            label="Emoji"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.country.value"
+                            label="Country"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.character_posture.value"
+                            label="Character Posture"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col
+                          v-if="isCharacter.value == 'Yes'"
+                          cols="12"
+                          md="4"
+                        >
+                          <v-text-field
+                            v-model="metadata.character_colour.value"
+                            label="Character Colors"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.custom_tag_1"
+                            label="Custom Tag 1"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.custom_tag_2"
+                            label="Custom Tag 2"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                          <v-text-field
+                            v-model="metadata.custom_tag_3"
+                            label="Custom Tag 3"
+                            filled
+                            readonly
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-form>
+                </v-card>
+              </v-dialog>
               <div v-if="openReview" id="review">
                 <div class="review_user_details">
                   <div class="review_inner">
@@ -274,7 +511,7 @@
                   <p>Custom Tag</p>
                   <v-text-field
                     v-model="metadata.custom_tag_1"
-                    label="Filled"
+                    label="Custom Tag 1"
                     filled
                   ></v-text-field>
                 </div>
@@ -282,7 +519,7 @@
                   <p>Custom Tag</p>
                   <v-text-field
                     v-model="metadata.custom_tag_2"
-                    label="Filled"
+                    label="Custom Tag 2"
                     filled
                   ></v-text-field>
                 </div>
@@ -290,7 +527,7 @@
                   <p>Custom Tag</p>
                   <v-text-field
                     v-model="metadata.custom_tag_3"
-                    label="Filled"
+                    label="Custom Tag 3"
                     filled
                   ></v-text-field>
                 </div>
@@ -321,6 +558,12 @@ export default {
     },
   },
   methods: {
+    saveUploadedFile() {
+      this.dialog = false;
+    },
+    dsicardUploadedFile() {
+      this.dialog = false;
+    },
     openReviewWindow() {
       this.openReview = true;
     },
@@ -525,7 +768,7 @@ export default {
       dialog: false,
       notifications: false,
       sound: true,
-    widgets: false,
+      widgets: false,
     };
   },
 };
