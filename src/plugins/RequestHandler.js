@@ -1,4 +1,5 @@
 import axios from "axios";
+import alikhUtils from "@/alikh.utils.js";
 import Constants from "../alikh.constants.js"
 
 class RequestHandler {
@@ -16,6 +17,9 @@ class RequestHandler {
             if (Constants.rejectedStatusCodes.includes(error.response.status)) {
                 error.response.data.statusCode = error.response.status
                 error.response.data.httpSuccess = false
+                if (error.response.status == 401){
+                    alikhUtils.unsetLoginCookie()
+                }
                 return error.response.data
             }
         }
