@@ -63,7 +63,7 @@ export default {
     getTags(file) {
       let tags = [];
       for (const key of Object.keys(file.metadata)) {
-        if (key == "description") {
+        if (["description","custom_tag_1","custom_tag_2","custom_tag_3","character_info"].includes(key)) {
           continue;
         }
         if (file.metadata[key][0]) {

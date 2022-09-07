@@ -10,13 +10,22 @@
                   class="img-width"
                   :src="alikhUtils.getFileServeUrl('/___.ai')"
                 />
-                <div class="user_details_cnt">
-                  File Name : <br />
-                  Date and Time: <br />
-                  Uploaded User: <br />
+                <div v-if="uploadedFile.length !=0" class="user_details_cnt">
+                  File Name : {{uploadedFile[0].name}}<br />
+                  Date and Time: {{uploadedFile[0].lastModifiedDate}}<br />
                 </div>
               </div>
-              <button class="btn mt-10">Browse</button>
+              <v-file-input
+                accept=".ai"
+                label="Click here to select a Adobe illustrator(.ai) file"
+                show-size
+                small-chips
+                truncate-length="15"
+                v-model="uploadedFile"
+                outlined
+                >Browse</v-file-input
+              >
+              <!-- <button class="btn mt-10">Browse</button> -->
               <br />
               <br />
               <br />
@@ -52,17 +61,16 @@
                     <v-container>
                       <v-row>
                         <v-col cols="12" md="4">
-                            <div class="user_details">
-                    <img
-                      class="img-width"
-                      :src="alikhUtils.getFileServeUrl('/___.ai')"
-                    />
-                    <div class="user_details_cnt">
-                      File Name : <br />
-                      Date and Time: <br />
-                      Uploaded User: <br />
-                    </div>
-                  </div>
+                          <div class="user_details">
+                            <img
+                              class="img-width"
+                              :src="alikhUtils.getFileServeUrl('/___.ai')"
+                            />
+                            <div class="user_details_cnt">
+                              File Name : {{uploadedFile[0].name}}<br />
+                              Date and Time: {{uploadedFile[0].lastModifiedDate}}<br />
+                            </div>
+                          </div>
                         </v-col>
                         <v-col cols="12" md="4">
                           <v-textarea
@@ -542,6 +550,7 @@
 
 <script>
 import alikhUtils from "@/alikh.utils";
+import { mapActions } from "vuex";
 
 export default {
   //   watch:{
@@ -558,8 +567,38 @@ export default {
     },
   },
   methods: {
+    parseMetadata(){
+      for (const key of Object.keys(this.metadata)) {
+        if (key == "character_info" && this.isCharacter.value == "Yes"){
+          this.metadata.character_info.primary = this.metadata.character_info.primary.value
+          this.metadata.character_info.secondary = this.metadata.character_info.secondary.value
+        }
+        if (["description","custom_tag_1","custom_tag_2","custom_tag_3","character_info"].includes(key)){
+          continue
+        }
+        this.metadata[key] = [this.metadata[key].value]
+      }
+    },
     saveUploadedFile() {
       this.dialog = false;
+      var reader = new FileReader()
+      reader.readAsDataURL(this.uploadedFile[0])
+      reader.onload = () => {
+          let payload = {
+            base64_upload: reader.result,
+            file_name: this.uploadedFile[0].name,
+            metadata:{}
+          }
+          this.parseMetadata()
+          Object.assign(payload.metadata, this.metadata)
+          this.createFile(payload).then((data)=>{
+            if(data.httpSuccess){
+              alikhUtils.successToast(`${this.uploadedFile[0].name} Successfully Uploaded`)
+            }else{
+              alikhUtils.failToast(`Failed to Upload ${this.uploadedFile[0].name}`)
+            }
+          })
+      };
     },
     dsicardUploadedFile() {
       this.dialog = false;
@@ -567,13 +606,16 @@ export default {
     openReviewWindow() {
       this.openReview = true;
     },
+    ...mapActions("files", ["createFile"]),
+
   },
   data() {
     return {
       alikhUtils,
+      uploadedFile: [],
       openReview: false,
       isCharacter: { value: "No" },
-      metadata: { character_info: { primary: "Male", secondary: "Female" } },
+      metadata: { character_info: { primary: {value:"Male"}, secondary: {value: "Female" }} },
       isCharacterItems: [{ value: "Yes" }, { value: "No" }],
       //   secondayCharaterItems:[],
       categoryItems: [

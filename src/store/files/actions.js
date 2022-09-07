@@ -13,4 +13,11 @@ export default {
         return resp
     },
 
+    async createFile(context, payload) {
+        let resp = await requesthandler.post(`${alikhConstants.filesUrl}`, payload)
+        return resp
+    },
+    
+
+
 }
