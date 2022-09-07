@@ -17,13 +17,11 @@ export default {
 
     async logInToServer(context, payload) {
         let resp = await requesthandler.post(Constants.loginUrl, payload)
-        if (Constants.acceptedStatusCodes.includes(resp.status)){
-            context.commit("setCurrentUserinfo", resp.data.user_info)
-            Utils.setLoginCookie(resp.data.user_info._id, resp.data.user_info)
-            return resp.data
-        }else{
-            return {}
+        if (resp.httpSuccess){
+            context.commit("setCurrentUserinfo", resp.updated_data)
+            Utils.setLoginCookie(resp.updated_data._id, resp.updated_data)   
         }
+        return resp
     },
 
     async logOutFromServer(context) {

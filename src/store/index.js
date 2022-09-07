@@ -1,6 +1,8 @@
 import { createStore } from 'vuex'
 
 import UserModule from "./users/index.js"
+import ReviewModule from "./reviews/index.js"
+import FilesModule from "./files/index.js"
 
 export default createStore({
   state: {
@@ -12,6 +14,8 @@ export default createStore({
   actions: {
   },
   modules: {
-    users: UserModule
+    users: UserModule,
+    reviews: ReviewModule,
+    files:FilesModule
   }
 })

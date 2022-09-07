@@ -1,17 +1,28 @@
 <template>
-  <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <LoginPage />
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+// Components
+import LoginPage from '../components/LoginPage.vue';
+import alikhUtils from '@/alikh.utils';
 
 export default {
   name: 'HomeView',
+  data(){
+    return{
+      showLogin:false
+    }
+  },
   components: {
-    HelloWorld
+    LoginPage,
+  },
+  created(){
+    if (alikhUtils.getCookieValue("userId")){
+      this.$router.push({"name":"alikh"})
+    }
+    this.showLogin = true
   }
-}
+
+};
 </script>
