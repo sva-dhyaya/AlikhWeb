@@ -1,5 +1,18 @@
 <template>
   <div>
+    <v-list>
+      <v-list-item>
+        <v-text-field
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            clear-icon="mdi-close-circle"
+            clearable
+            @click:prepend-inner="getFilesFromServer"
+            @click:clear="clearSearch"
+            v-model="search"
+          ></v-text-field>
+      </v-list-item>  
+    <v-list-item>
     <v-item-group>
       <v-container>
         <v-row dense>
@@ -28,33 +41,6 @@
         </v-row>
       </v-container>
     </v-item-group>
-    <ul v-if="false" class="thumbnail-view-ul common-view-ul">
-      <li v-for="file in files" :key="file._id">
-        <div>
-          <div style="height: 180px; width: 220px">
-            <img
-              :src="alikhUtils.getFileServeUrl(file.thumbnail_path)"
-              height="180"
-              width="220"
-              draggable="false"
-            />
-          </div>
-          <div>
-            <h5>{{ alikhUtils.capitalizeFirstLetter(file.name) }}</h5>
-            <p v-if="file.metadata.description">
-              {{ file.metadata.description }}
-            </p>
-            <v-chip
-              v-for="tag in getTags(file)"
-              :key="tag._id"
-              class="ma-2 short"
-            >
-              {{ tag.val }}
-            </v-chip>
-          </div>
-        </div>
-      </li>
-    </ul>
     <div class="text-center">
       <v-pagination
         v-if="totalPages > 0"
@@ -65,6 +51,8 @@
         circle
       ></v-pagination>
     </div>
+  </v-list-item>
+  </v-list>
   </div>
 </template>
 
@@ -78,6 +66,7 @@ export default {
       alikhUtils,
       page: 1,
       totalPages: -1,
+      search:null
     };
   },
   watch: {
@@ -86,8 +75,20 @@ export default {
         this.nextPage();
       }
     },
+    search(newval, oldval) {
+      if (newval && (newval != oldval)) {
+        if (newval.length >2){
+          this.page=1
+          this.getFilesFromServer();
+        }
+      }
+    },
   },
   methods: {
+    clearSearch(){
+      this.search=null
+      this.getFilesFromServer()
+    },
     getTags(file) {
       let tags = [];
       for (const key of Object.keys(file.metadata)) {
@@ -109,7 +110,7 @@ export default {
       return tags;
     },
     getFilesFromServer() {
-      this.getFiles({ params: { page: this.page } }).then((data) => {
+      this.getFiles({ params: { page: this.page, globalSearch:this.search } }).then((data) => {
         if (data.httpSuccess) {
           this.files = data.files ? data.files : [];
           this.totalPages = data.page_count;
