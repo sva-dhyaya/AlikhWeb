@@ -8,84 +8,100 @@
       <v-divider></v-divider>
 
       <v-list density="compact" nav>
-        <v-list-item
+        <template v-for="link in links" :key="link.text"> 
+        <v-list-item 
+          v-if="!link.subLinks && link.type=='route'"
+          :to="link.to"
           class="ml-5"
-          prepend-icon="mdi-view-dashboard"
-          title="Home"
-          value="Home"
-          @click="changeComponent($event, 'AlikhHome')"
+          :prepend-icon="link.icon"
+          :title="link.text"
+          :value="link.text"
         ></v-list-item>
-        <v-list-item
+        <v-list-item 
+          v-else-if="!link.subLinks && link.type=='function'"
+          @click="link.func($event, link.text)"
           class="ml-5"
-          prepend-icon="mdi-folder"
-          title="Files"
-          value="myfiles"
-          @click="changeComponent($event, 'FileBrowse')"
+          :prepend-icon="link.icon"
+          :title="link.text"
+          :value="link.text"
         ></v-list-item>
-        <v-list-item
-          class="ml-5"
-          prepend-icon="mdi-upload"
-          title="Upload"
-          value="Upload"
-          @click="changeComponent($event, 'UploadFile')"
-        ></v-list-item>
-        <v-list-item
-          class="ml-5"
-          prepend-icon="mdi-history"
-          title="Status"
-          value="Status"
-          @click="changeComponent($event, 'ReviewFile')"
-        ></v-list-item>
-        <v-list-item
-          class="ml-5"
-          prepend-icon="mdi-cog"
-          title="Settings"
-          value="Settings"
-          @click="changeComponent($event, 'AlikhSettings')"
-        ></v-list-item>
-        <v-list-item
-          class="ml-5"
-          prepend-icon="mdi-delete-empty"
-          title="Bin"
-          value="Bin"
-          @click="changeComponent($event, 'BinPage')"
-        ></v-list-item>
-        <v-list-item
-          class="ml-5"
-          prepend-icon="mdi-folder"
-          title="Logout"
-          value="Logout"
-          @click="logout($event, 'Logout')"
-        ></v-list-item>
+        </template>
       </v-list>
     </v-navigation-drawer>
 
     <v-main>
-      <component v-if="selectedComponent" :is="selectedComponent"></component>
+      <router-view
+        v-if="selectedComponent"
+        :is="selectedComponent"
+      ></router-view>
     </v-main>
   </div>
 </template>
 
 <script>
-import logo from "../assets/logo.jpg";
-import FileBrowse from "../components/FileBrowse.vue";
-import AlikhHome from "../components/AlikhHome.vue";
-import UploadFile from "@/components/UploadPage.vue";
 import alikhUtils from "@/alikh.utils";
-import ReviewFile from "@/components/ReviewFile.vue";
+import logo from "../assets/logo.jpg";
 
 export default {
   data() {
     return {
       logo,
       selectedComponent: "AlikhHome",
+      links: [
+        {
+          to: "/alikh/dashboard",
+          icon: "mdi-view-dashboard",
+          text: "Dashboard",
+          type: "route"
+        },
+        {
+          to: "/alikh/files",
+          icon: "mdi-folder",
+          text: "Files",
+          type: "route"
+        },
+        {
+          to: "/alikh/upload",
+          icon: "mdi-upload",
+          text: "Upload",
+          type: "route"
+        },
+        {
+          to: "/alikh/review",
+          icon: "mdi-history",
+          text: "Review",
+          type: "route"
+        },
+        {
+          icon: "mdi-cog",
+          text: "Settings",
+          subLinks: [
+            {
+              text: "Players list",
+              to: "/players",
+              type: "route"
+            },
+            {
+              text: "Import WTA Players",
+              to: "/players/import",
+              type: "route"
+            },
+          ],
+        },
+        
+        {
+          icon: "mdi-delete-empty",
+          text: "Bin",
+          type: "route"
+        },
+        {
+          icon: "mdi-logout",
+          text: "Logout",
+          type: "function",
+          func: this.logout
+        },
+      ],
     };
-  },
-  components: {
-    FileBrowse: FileBrowse,
-    AlikhHome: AlikhHome,
-    UploadFile: UploadFile,
-    ReviewFile: ReviewFile,
   },
   methods: {
     changeComponent(event, compName) {
@@ -102,6 +118,9 @@ export default {
       this.$router.push({ name: "home" });
     },
   },
+  created(){
+    this.$router.push({name:"dashboard"})
+  }
 };
 </script>
 
