@@ -905,7 +905,7 @@ p {
 }
 .main {
   margin-left: 0px;
-  width: 166%;
+  /* width: 166%; */
 }
 .border_blue {
   border: 2px solid blue;

@@ -1,25 +1,34 @@
 <template>
   <div class="container row">
-    <div class="col-3 left sticky-top">
-      <div class="sidebar_cnt">
-        <div style="text-align:center;"><img :src="logo" /></div>
-        <div class="sidebar_menu">
-          <ul>
-            <li :class="{activePanel: selectedComponent == 'AlikhHome'}" @click="changeComponent($event, 'AlikhHome')">Home</li>
-            <li :class="{activePanel: selectedComponent == 'FileBrowse'}" @click="changeComponent($event,'FileBrowse')">Files</li>
-            <li :class="{activePanel: selectedComponent == 'UploadFile'}" @click="changeComponent($event,'UploadFile')">Upload</li>
-            <li :class="{activePanel: selectedComponent == 'ReviewFile'}" @click="changeComponent($event,'ReviewFile')">Status</li>
-            <li :class="{activePanel: selectedComponent == 'AlikhSettings'}" @click="changeComponent($event,'AlikhSettings')">Settings</li>
-            <li :class="{activePanel: selectedComponent == 'BinPage'}" @click="changeComponent($event,'BinPage')">Bin</li>
-            <li :class="{activePanel: selectedComponent == 'Logout'}" @click="logout($event,'Logout')">Log Out</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-7">
-        <component v-if="selectedComponent" :is="selectedComponent"></component>
-    </div>
+    <div>
+      <v-navigation-drawer
+        expand-on-hover
+        rail
+      >
+        <v-list>
+          <v-img
+            :src="logo" 
+          ></v-img>
+        </v-list>
 
+        <v-divider></v-divider>
+
+        <v-list density="compact" nav>
+          <v-list-item class="ml-5" prepend-icon="mdi-view-dashboard" title="Home" value="Home" @click="changeComponent($event, 'AlikhHome')"></v-list-item>
+          <v-list-item class="ml-5" prepend-icon="mdi-folder" title="Files" value="myfiles" @click="changeComponent($event,'FileBrowse')"></v-list-item>
+          <v-list-item class="ml-5" prepend-icon="mdi-upload" title="Upload" value="Upload" @click="changeComponent($event, 'UploadFile')"></v-list-item>
+          <v-list-item class="ml-5" prepend-icon="mdi-history" title="Status" value="Status" @click="changeComponent($event,'ReviewFile')"></v-list-item>
+          <v-list-item class="ml-5" prepend-icon="mdi-cog" title="Settings" value="Settings" @click="changeComponent($event, 'AlikhSettings')"></v-list-item>
+          <v-list-item class="ml-5" prepend-icon="mdi-delete-empty" title="Bin" value="Bin" @click="changeComponent($event,'BinPage')"></v-list-item>
+          <v-list-item class="ml-5" prepend-icon="mdi-folder" title="Logout" value="Logout" @click="logout($event,'Logout')"></v-list-item>
+        </v-list>
+
+      </v-navigation-drawer>
+
+      <v-main>
+        <component v-if="selectedComponent" :is="selectedComponent"></component>
+      </v-main>
+    </div>
   </div>
 </template>
 

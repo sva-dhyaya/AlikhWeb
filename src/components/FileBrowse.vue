@@ -130,7 +130,7 @@ p {
   flex-wrap: wrap;
   padding: 0px;
   margin-top: 0px;
-  width: 170%;
+  /* width: 170%; */
   padding-left: 20px;
   justify-content: left;
   overflow: hidden;

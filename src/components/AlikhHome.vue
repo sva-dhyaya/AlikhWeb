@@ -170,7 +170,7 @@ p{
 	border-radius: 25px;
 	padding: 35px 60px;
 	/* margin: 40px 15%; */
-	width: 160%;
+	/* width: 160%; */
 	background-color: #4873cf;
 }
 .home_cnt li{
