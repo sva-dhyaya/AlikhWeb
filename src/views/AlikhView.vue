@@ -1,73 +1,107 @@
 <template>
-  <div class="container row">
-    <div>
-      <v-navigation-drawer
-        expand-on-hover
-        rail
-      >
-        <v-list>
-          <v-img
-            :src="logo" 
-          ></v-img>
-        </v-list>
+  <div>
+    <v-navigation-drawer expand-on-hover rail>
+      <v-list>
+        <v-img :src="logo"></v-img>
+      </v-list>
 
-        <v-divider></v-divider>
+      <v-divider></v-divider>
 
-        <v-list density="compact" nav>
-          <v-list-item class="ml-5" prepend-icon="mdi-view-dashboard" title="Home" value="Home" @click="changeComponent($event, 'AlikhHome')"></v-list-item>
-          <v-list-item class="ml-5" prepend-icon="mdi-folder" title="Files" value="myfiles" @click="changeComponent($event,'FileBrowse')"></v-list-item>
-          <v-list-item class="ml-5" prepend-icon="mdi-upload" title="Upload" value="Upload" @click="changeComponent($event, 'UploadFile')"></v-list-item>
-          <v-list-item class="ml-5" prepend-icon="mdi-history" title="Status" value="Status" @click="changeComponent($event,'ReviewFile')"></v-list-item>
-          <v-list-item class="ml-5" prepend-icon="mdi-cog" title="Settings" value="Settings" @click="changeComponent($event, 'AlikhSettings')"></v-list-item>
-          <v-list-item class="ml-5" prepend-icon="mdi-delete-empty" title="Bin" value="Bin" @click="changeComponent($event,'BinPage')"></v-list-item>
-          <v-list-item class="ml-5" prepend-icon="mdi-folder" title="Logout" value="Logout" @click="logout($event,'Logout')"></v-list-item>
-        </v-list>
+      <v-list density="compact" nav>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-view-dashboard"
+          title="Home"
+          value="Home"
+          @click="changeComponent($event, 'AlikhHome')"
+        ></v-list-item>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-folder"
+          title="Files"
+          value="myfiles"
+          @click="changeComponent($event, 'FileBrowse')"
+        ></v-list-item>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-upload"
+          title="Upload"
+          value="Upload"
+          @click="changeComponent($event, 'UploadFile')"
+        ></v-list-item>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-history"
+          title="Status"
+          value="Status"
+          @click="changeComponent($event, 'ReviewFile')"
+        ></v-list-item>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-cog"
+          title="Settings"
+          value="Settings"
+          @click="changeComponent($event, 'AlikhSettings')"
+        ></v-list-item>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-delete-empty"
+          title="Bin"
+          value="Bin"
+          @click="changeComponent($event, 'BinPage')"
+        ></v-list-item>
+        <v-list-item
+          class="ml-5"
+          prepend-icon="mdi-folder"
+          title="Logout"
+          value="Logout"
+          @click="logout($event, 'Logout')"
+        ></v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
-      </v-navigation-drawer>
-
-      <v-main>
-        <component v-if="selectedComponent" :is="selectedComponent"></component>
-      </v-main>
-    </div>
+    <v-main>
+      <component v-if="selectedComponent" :is="selectedComponent"></component>
+    </v-main>
   </div>
 </template>
 
 <script>
 import logo from "../assets/logo.jpg";
-import FileBrowse from "../components/FileBrowse.vue"
-import AlikhHome from "../components/AlikhHome.vue"
+import FileBrowse from "../components/FileBrowse.vue";
+import AlikhHome from "../components/AlikhHome.vue";
 import UploadFile from "@/components/UploadPage.vue";
-import alikhUtils from '@/alikh.utils';
+import alikhUtils from "@/alikh.utils";
 import ReviewFile from "@/components/ReviewFile.vue";
 
 export default {
   data() {
     return {
       logo,
-      selectedComponent:"AlikhHome"
+      selectedComponent: "AlikhHome",
     };
   },
-  components:{
-    "FileBrowse":FileBrowse,
-    "AlikhHome": AlikhHome,
-    "UploadFile": UploadFile,
-    "ReviewFile": ReviewFile
+  components: {
+    FileBrowse: FileBrowse,
+    AlikhHome: AlikhHome,
+    UploadFile: UploadFile,
+    ReviewFile: ReviewFile,
   },
-  methods:{
-    changeComponent(event, compName){
-      if (event != null){
-        event.stopImmediatePropagation()
+  methods: {
+    changeComponent(event, compName) {
+      if (event != null) {
+        event.stopImmediatePropagation();
       }
-      this.selectedComponent = compName
+      this.selectedComponent = compName;
     },
-    logout(event){
-      if (event != null){
-        event.stopImmediatePropagation()
+    logout(event) {
+      if (event != null) {
+        event.stopImmediatePropagation();
       }
-      alikhUtils.unsetLoginCookie()
-      this.$router.push({"name":"home"})
-    }
-  }
+      alikhUtils.unsetLoginCookie();
+      this.$router.push({ name: "home" });
+    },
+  },
 };
 </script>
 
@@ -79,17 +113,17 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 .split {
   height: 100%;
@@ -101,17 +135,17 @@ export default {
   padding-top: 20px;
 }
 
-ul li{
+ul li {
   color: #fff;
-  font-weight:bold;
+  font-weight: bold;
 }
 
 ul li:hover {
-  background-color:rgb(0, 162, 255);
+  background-color: rgb(0, 162, 255);
 }
 
-.activePanel{
-  background-color:rgb(0, 132, 255);
+.activePanel {
+  background-color: rgb(0, 132, 255);
 }
 
 /* ul li a:hover, ul li a:focus {

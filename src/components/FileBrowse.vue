@@ -1,6 +1,34 @@
 <template>
   <div>
-    <ul class="thumbnail-view-ul common-view-ul">
+    <v-item-group>
+      <v-container>
+        <v-row dense>
+          <v-col class="mr-12 mb-12" v-for="file in files" :key="file._id">
+            <v-card class="mx-auto vcard_scroll" width="238px" height="380px">
+              <v-img
+                class="align-end text-white"
+                height="200"
+                :src="alikhUtils.getFileServeUrl(file.thumbnail_path)"
+                cover
+              >
+                <v-card-title>{{
+                  alikhUtils.capitalizeFirstLetter(file.name)
+                }}</v-card-title>
+              </v-img>
+
+              <v-card-subtitle v-if="file.metadata.description" class="pt-4">
+                {{ file.metadata.description }}
+              </v-card-subtitle>
+
+              <v-chip v-for="tag in getTags(file)" :key="tag._id" class="ma-2">
+                {{ tag.val }}
+              </v-chip>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-item-group>
+    <ul v-if="false" class="thumbnail-view-ul common-view-ul">
       <li v-for="file in files" :key="file._id">
         <div>
           <div style="height: 180px; width: 220px">
@@ -29,7 +57,7 @@
     </ul>
     <div class="text-center">
       <v-pagination
-        v-if="totalPages>0"
+        v-if="totalPages > 0"
         v-model="page"
         :length="totalPages"
         :total-visible="5"
@@ -52,18 +80,26 @@ export default {
       totalPages: -1,
     };
   },
-  watch:{
-    page(newval, oldval){
-      if (newval != oldval){
-        this.nextPage()
+  watch: {
+    page(newval, oldval) {
+      if (newval != oldval) {
+        this.nextPage();
       }
-    }
+    },
   },
   methods: {
     getTags(file) {
       let tags = [];
       for (const key of Object.keys(file.metadata)) {
-        if (["description","custom_tag_1","custom_tag_2","custom_tag_3","character_info"].includes(key)) {
+        if (
+          [
+            "description",
+            "custom_tag_1",
+            "custom_tag_2",
+            "custom_tag_3",
+            "character_info",
+          ].includes(key)
+        ) {
           continue;
         }
         if (file.metadata[key][0]) {
@@ -73,91 +109,35 @@ export default {
       return tags;
     },
     getFilesFromServer() {
-      this.getFiles({params:{page:this.page}}).then((data) => {
+      this.getFiles({ params: { page: this.page } }).then((data) => {
         if (data.httpSuccess) {
           this.files = data.files ? data.files : [];
           this.totalPages = data.page_count;
           window.scrollTo({
             top: 0,
             left: 0,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         }
       });
     },
     nextPage() {
-      this.getFilesFromServer()
+      this.getFilesFromServer();
     },
     ...mapActions("files", ["getFiles"]),
   },
   created() {
-    this.getFilesFromServer()
+    this.getFilesFromServer();
   },
 };
 </script>
 
 <style scoped>
-p {
-  word-break: break-all;
-  white-space: normal;
+.vcard_scroll {
+  overflow-y: scroll;
 }
-* {
-  margin: 0;
-  padding: 0 0 0 0;
-  box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
-}
-.short {
-  width: 64px;
-  font-size: 11px;
-}
-.img_card {
-  margin: 0 5px;
-  width: 19%;
-  border-bottom: 1px solid #efefef;
-  border-left: 1px solid #efefef;
-  border-right: 1px solid #efefef;
-}
-.card_cnt {
-  padding: 10px 15px;
-}
-.img_round {
-  width: 100%;
-}
-.thumbnail-view-ul {
-  list-style-type: none;
-  display: inline-flex;
-  flex-wrap: wrap;
-  padding: 0px;
-  margin-top: 0px;
-  /* width: 170%; */
-  padding-left: 20px;
-  justify-content: left;
-  overflow: hidden;
-}
-.thumbnail-view-ul li {
-  display: inline-block;
-  /* margin-right: 8%; */
-  width: 25%;
-  padding-left: 5px;
-  padding-top: 7%;
-  /* margin-top: 5px; */
-  height: 300%;
-}
-.thumbnail-view-ul li .thumbnail-data {
-  text-align: center !important;
-}
-.thumbnail-view-ul li .asset-thumbnail {
-  height: 180px;
-  width: 220px;
-  border-radius: 7px;
-  margin-top: 8px;
-  position: relative;
-}
-
-.thumbnail-view-ul li .asset-thumbnail img {
-  width: 100%;
-  height: 100%;
-  border-radius: 7px;
+::-webkit-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
 }
 </style>
