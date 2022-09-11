@@ -1,4 +1,6 @@
 <template>
+   <v-list>
+    <v-list-item>
   <div class="review_class">
     <v-select
       v-model="reviewsToShow"
@@ -11,7 +13,8 @@
     >
     </v-select>
   </div>
-
+</v-list-item>
+<v-list-item>
   <v-table fixed-header height="100%">
     <thead>
       <tr>
@@ -36,6 +39,8 @@
       </tr>
     </tbody>
   </v-table>
+</v-list-item>
+</v-list>
   <v-dialog
     v-model="dialog"
     fullscreen
