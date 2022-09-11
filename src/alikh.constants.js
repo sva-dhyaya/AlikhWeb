@@ -8,6 +8,7 @@ export default {
     dashboardReviewsUrl: `${extended_url}/dashboard/files/reviews`,
     fileServeUrl: `${extended_url}/serve/file`,
     filesUrl: `${extended_url}/files`,
+    usersUrl: `${extended_url}/users`,
     defaultToastTime: 3000,
     maxToastsInPage: 20,
     toastTransition: "Vue-Toastification__bounce", //"Vue-Toastification__[bounce/fade/slideBlurred]"

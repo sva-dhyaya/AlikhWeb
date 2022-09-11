@@ -5,6 +5,7 @@ import FileBrowse from "@/components/FileBrowse.vue";
 import AlikhHome from "@/components/AlikhHome.vue";
 import UploadFile from "@/components/UploadPage.vue";
 import ReviewFile from "@/components/ReviewFile.vue";
+import UsersFile from "@/components/UsersList.vue";
 
 const alikhRoutes = [
   {
@@ -26,6 +27,11 @@ const alikhRoutes = [
     path: 'review',
     name: 'review',
     component: ReviewFile
+  },
+  {
+    path: 'users',
+    name: 'users',
+    component: UsersFile
   },
 ]
 

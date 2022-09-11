@@ -57,7 +57,7 @@
         </v-btn>
         <v-toolbar-title>Review Window</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-toolbar-items v-if="alikhUtils.getCookieValue('userInfo')._id == this.selectedFile.upload_info.user_id">
+        <v-toolbar-items v-if="alikhUtils.getCookieValue('userInfo')._id == this.selectedFile.upload_info?this.selectedFile.upload_info.user_id:null">
           <v-btn dark text @click="updateFileMetatda"> Update Metatda </v-btn>
         </v-toolbar-items>
         <v-toolbar-items v-if="alikhUtils.getCookieValue('userInfo').user_type =='ADMINISTRATOR'">
@@ -421,7 +421,7 @@ export default {
   },
   methods: {
     isValidReviewer(){
-      return (alikhUtils.getCookieValue('userInfo').user_type =='ADMINISTRATOR')||(alikhUtils.getCookieValue('userInfo')._id == this.selectedFile.upload_info.user_id)
+      return (alikhUtils.getCookieValue('userInfo').user_type =='ADMINISTRATOR')||(alikhUtils.getCookieValue('userInfo')._id == this.selectedFile.upload_info?this.selectedFile.upload_info.user_id:null)
     },
     openForReview(file) {
       Object.assign(this.selectedFile, file);
@@ -434,6 +434,8 @@ export default {
       this.updateFile(this.selectedFile).then((data)=>{
         if (data.httpSuccess) {
           alikhUtils.successToast(`Approved ${this.selectedFile.name}`)
+          this.getFilesFromServer()
+
         }
       })
     },
@@ -444,6 +446,8 @@ export default {
       this.updateFile(this.selectedFile).then((data)=>{
         if (data.httpSuccess) {
           alikhUtils.successToast(`Rejected ${this.selectedFile.name}`)
+          this.getFilesFromServer()
+
         }
       })
     },
@@ -452,6 +456,7 @@ export default {
       this.updateFile(this.selectedFile).then((data)=>{
         if (data.httpSuccess) {
           alikhUtils.successToast(`Updated ${this.selectedFile.name}`)
+          this.getFilesFromServer()
         }
       })
     },

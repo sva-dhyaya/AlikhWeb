@@ -31,4 +31,21 @@ export default {
         this.$router.push({ name: "Home" })
         return {};
     },
+
+    async getUsersFromServer(context, payload) {
+        let resp = await requesthandler.get(Constants.usersUrl, payload)
+        return resp
+    },
+
+    async createUserInServer(context, payload) {
+        let resp = await requesthandler.post(Constants.usersUrl, payload)
+        return resp
+    },
+
+    async editUserInServer(context, payload) {
+        let userId = payload._id
+        delete payload._id
+        let resp = await requesthandler.put(`${Constants.usersUrl}/${userId}`, payload)
+        return resp
+    },
 }

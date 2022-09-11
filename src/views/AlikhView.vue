@@ -8,23 +8,53 @@
       <v-divider></v-divider>
 
       <v-list density="compact" nav>
-        <template v-for="link in links" :key="link.text"> 
-        <v-list-item 
-          v-if="!link.subLinks && link.type=='route'"
-          :to="link.to"
-          class="ml-5"
-          :prepend-icon="link.icon"
-          :title="link.text"
-          :value="link.text"
-        ></v-list-item>
-        <v-list-item 
-          v-else-if="!link.subLinks && link.type=='function'"
-          @click="link.func($event, link.text)"
-          class="ml-5"
-          :prepend-icon="link.icon"
-          :title="link.text"
-          :value="link.text"
-        ></v-list-item>
+        <template v-for="link in links" :key="link.text">
+          <v-list-item
+            v-if="!link.subLinks && link.type == 'route'"
+            :to="link.to"
+            class="ml-5"
+            :prepend-icon="link.icon"
+            :title="link.text"
+            :value="link.text"
+          ></v-list-item>
+          <v-list-item
+            v-else-if="!link.subLinks && link.type == 'function'"
+            @click="link.func($event, link.text)"
+            class="ml-5"
+            :prepend-icon="link.icon"
+            :title="link.text"
+            :value="link.text"
+          ></v-list-item>
+          <v-list-group :value="true" no-action v-else-if="link.subLinks" :key="link.text">
+            <template v-slot:activator>
+              <v-list-item
+                class="ml-5"
+                :prepend-icon="link.icon"
+                :title="link.text"
+                :value="link.text"
+                :to="link.to"
+              ></v-list-item>
+            </template>
+            <template v-for="slink in link.subLinks" :key="slink.text">
+              <v-list-item
+                v-if="slink.type == 'route'"
+                :to="slink.to"
+                class="ml-5"
+                :prepend-icon="slink.icon"
+                :title="slink.text"
+                :value="slink.text"
+              >
+              </v-list-item>
+              <v-list-item
+                v-else-if="slink.type == 'function'"
+                @click="slink.func($event, slink.text)"
+                class="ml-5"
+                :prepend-icon="slink.icon"
+                :title="slink.text"
+                :value="slink.text"
+              ></v-list-item>
+            </template>
+          </v-list-group>
         </template>
       </v-list>
     </v-navigation-drawer>
@@ -52,53 +82,50 @@ export default {
           to: "/alikh/dashboard",
           icon: "mdi-view-dashboard",
           text: "Dashboard",
-          type: "route"
+          type: "route",
         },
         {
           to: "/alikh/files",
           icon: "mdi-folder",
           text: "Files",
-          type: "route"
+          type: "route",
         },
         {
           to: "/alikh/upload",
           icon: "mdi-upload",
           text: "Upload",
-          type: "route"
+          type: "route",
         },
         {
           to: "/alikh/review",
           icon: "mdi-history",
           text: "Review",
-          type: "route"
+          type: "route",
         },
         {
           icon: "mdi-cog",
           text: "Settings",
+          to: "/alikh/users",
           subLinks: [
             {
-              text: "Players list",
-              to: "/players",
-              type: "route"
-            },
-            {
-              text: "Import WTA Players",
-              to: "/players/import",
-              type: "route"
+              icon: "mdi-account-multiple",
+              text: "User Settings",
+              to: "/alikh/users",
+              type: "route",
             },
           ],
         },
-        
+
         {
           icon: "mdi-delete-empty",
           text: "Bin",
-          type: "route"
+          type: "route",
         },
         {
           icon: "mdi-logout",
           text: "Logout",
           type: "function",
-          func: this.logout
+          func: this.logout,
         },
       ],
     };
@@ -118,9 +145,9 @@ export default {
       this.$router.push({ name: "home" });
     },
   },
-  created(){
-    this.$router.push({name:"dashboard"})
-  }
+  created() {
+    this.$router.push({ name: "dashboard" });
+  },
 };
 </script>
 
