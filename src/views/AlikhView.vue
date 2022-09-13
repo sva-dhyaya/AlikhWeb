@@ -117,6 +117,7 @@ export default {
         },
 
         {
+          to: "/alikh/bin",
           icon: "mdi-delete-empty",
           text: "Bin",
           type: "route",

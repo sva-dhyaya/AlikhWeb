@@ -6,6 +6,7 @@ import AlikhHome from "@/components/AlikhHome.vue";
 import UploadFile from "@/components/UploadPage.vue";
 import ReviewFile from "@/components/ReviewFile.vue";
 import UsersFile from "@/components/UsersList.vue";
+import Deletedfiles from "@/components/DeletedFiles.vue";
 
 const alikhRoutes = [
   {
@@ -32,6 +33,11 @@ const alikhRoutes = [
     path: 'users',
     name: 'users',
     component: UsersFile
+  },
+  {
+    path: 'bin',
+    name: 'bin',
+    component: Deletedfiles
   },
 ]
 
