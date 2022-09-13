@@ -18,6 +18,11 @@ export default {
         return resp
     },
     
+    async removeFile(context, payload) {
+        console.log("--------------------",payload)
+        let resp = await requesthandler.delete(`${alikhConstants.filesUrl}/${payload._id}`, payload)
+        return resp
+    },
 
 
 }

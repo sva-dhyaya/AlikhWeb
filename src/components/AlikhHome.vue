@@ -22,6 +22,10 @@
                         <p>Pending Files</p>
                         <p>{{ review.pending_files }}</p>
                       </li>
+                      <li id="deleted_files" class="home_cnt_list">
+                        <p>Total Deleted Files</p>
+                        <p>{{ review.deleted_files }}</p>
+                      </li>
                       <li id="upload_files" class="home_cnt_list">
                         <p>Total Uploaded Files</p>
                         <p>{{ review.total_files }}</p>
@@ -205,5 +209,8 @@ p {
 }
 #upload_files {
   background-color: #f6f3fe;
+}
+#deleted_files {
+  background-color: #0DCEEA;
 }
 </style>

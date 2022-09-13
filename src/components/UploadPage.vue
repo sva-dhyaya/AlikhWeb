@@ -7,8 +7,11 @@
             <div class="flex-40">
               <div class="user_details">
                 <img
+                  v-if="fileUid"
+                  :ref="fileUid+'main'"
                   class="img-width"
-                  :src="alikhUtils.getFileServeUrl('/___.ai')"
+                  :src="alikhUtils.getFileServeUrlbyId(fileUid)"
+                  @click="realoadImage(fileUid+'main')"
                 />
                 <div v-if="uploadedFile.length !=0" class="user_details_cnt">
                   File Name : {{uploadedFile[0].name}}<br />
@@ -17,12 +20,14 @@
               </div>
               <v-file-input
                 accept=".ai"
-                label="Click here to select a Adobe illustrator(.ai) file"
+                label="Select a Adobe illustrator(.ai) file"
                 show-size
                 small-chips
                 truncate-length="15"
                 v-model="uploadedFile"
                 outlined
+                ref="uploadFile"
+                @change="resumableUpload"
                 >Browse</v-file-input
               >
               <!-- <button class="btn mt-10">Browse</button> -->
@@ -63,8 +68,10 @@
                         <v-col cols="12" md="4">
                           <div class="user_details">
                             <img
+                              :ref="fileUid+'form'"
                               class="img-width"
-                              :src="alikhUtils.getFileServeUrl('/___.ai')"
+                              :src="alikhUtils.getFileServeUrlbyId(fileUid)"
+                              @click="realoadImage(fileUid+'form')"
                             />
                             <div class="user_details_cnt">
                               File Name : {{uploadedFile[0].name}}<br />
@@ -273,8 +280,11 @@
                 <div class="review_user_details">
                   <div class="review_inner">
                     <img
+                      :ref="fileUid+'form'"
+
                       class="img-width"
-                      :src="alikhUtils.getFileServeUrl('/___.ai')"
+                      :src="alikhUtils.getFileServeUrlbyId(fileUid)"
+                      @click="realoadImage(fileUid+'form')"
                     />
                   </div>
                   <div class="review_inner">
@@ -550,6 +560,7 @@
 
 <script>
 import alikhUtils from "@/alikh.utils";
+import FileUploader from "@/plugins/fileUploader";
 import { mapActions } from "vuex";
 
 export default {
@@ -572,6 +583,8 @@ export default {
         if (key == "character_info" && this.isCharacter.value == "Yes"){
           this.metadata.character_info.primary = this.metadata.character_info.primary.value
           this.metadata.character_info.secondary = this.metadata.character_info.secondary.value
+        }else{
+          delete this.metadata.character_info
         }
         if (["description","custom_tag_1","custom_tag_2","custom_tag_3","character_info"].includes(key)){
           continue
@@ -581,38 +594,77 @@ export default {
     },
     saveUploadedFile() {
       this.dialog = false;
-      var reader = new FileReader()
-      reader.readAsDataURL(this.uploadedFile[0])
-      reader.onload = () => {
-          let payload = {
-            base64_upload: reader.result,
-            file_name: this.uploadedFile[0].name,
-            metadata:{}
-          }
-          this.parseMetadata()
-          Object.assign(payload.metadata, this.metadata)
-          this.createFile(payload).then((data)=>{
-            if(data.httpSuccess){
-              alikhUtils.successToast(`${this.uploadedFile[0].name} Successfully Uploaded`)
-            }else{
-              alikhUtils.failToast(`Failed to Upload ${this.uploadedFile[0].name}`)
-            }
-          })
-      };
+      let payload = {
+        _id: this.fileUid,
+        metadata:{}
+      }
+      this.parseMetadata()
+      Object.assign(payload.metadata, this.metadata)
+      this.updateFile(payload).then((data)=>{
+        if(data.httpSuccess){
+          alikhUtils.successToast(`${this.uploadedFile[0].name} Successfully Uploaded`)
+        }else{
+          alikhUtils.failToast(`Failed to Upload ${this.uploadedFile[0].name}`)
+        }
+      })
     },
+    // saveUploadedFile() {
+    //   this.dialog = false;
+    //   var reader = new FileReader()
+    //   reader.readAsDataURL(this.uploadedFile[0])
+    //   reader.onload = () => {
+    //       let payload = {
+    //         base64_upload: reader.result,
+    //         file_name: this.uploadedFile[0].name,
+    //         metadata:{}
+    //       }
+    //       this.parseMetadata()
+    //       Object.assign(payload.metadata, this.metadata)
+    //       this.createFile(payload).then((data)=>{
+    //         if(data.httpSuccess){
+    //           alikhUtils.successToast(`${this.uploadedFile[0].name} Successfully Uploaded`)
+    //         }else{
+    //           alikhUtils.failToast(`Failed to Upload ${this.uploadedFile[0].name}`)
+    //         }
+    //       })
+    //   };
+    // },
     dsicardUploadedFile() {
       this.dialog = false;
+      let payload = {
+        _id: this.fileUid,
+      }
+      this.removeFile(payload).then((data)=>{
+            if(data.httpSuccess){
+              alikhUtils.successToast(`File Discarded`)
+            }else{
+              alikhUtils.failToast(`Failed to Discard file`)
+            }
+            this.fileUid = null
+          })
     },
     openReviewWindow() {
       this.openReview = true;
     },
-    ...mapActions("files", ["createFile"]),
+    resumableUpload(){
+      for (let i = 0; i < this.$refs.uploadFile.files.length; i++) {
+        this.fileUid = alikhUtils.getUUID()
+        this.filesInfo[this.fileUid] = new FileUploader(this.$refs.uploadFile.files[i], "/opt/STORAGE", this.fileUid)
+      }
+    },
+    realoadImage(refId){
+      let image = this.$refs[refId]
+      image.src = alikhUtils.getFileServeUrlbyId(this.fileUid) + `?${new Date().getTime()}`
+    },
+    ...mapActions("files", ["createFile", "updateFile", "removeFile"]),
 
   },
   data() {
     return {
       alikhUtils,
+      fileUid: null,
       uploadedFile: [],
+      filesInfo:{},
       openReview: false,
       isCharacter: { value: "No" },
       metadata: { character_info: { primary: {value:"Male"}, secondary: {value: "Female" }} },

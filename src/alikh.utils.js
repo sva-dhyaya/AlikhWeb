@@ -9,6 +9,9 @@ export default {
     getFileServeUrl(path){
         return `${window.location.origin}${Constansts.fileServeUrl}${path}`
     },
+    getFileServeUrlbyId(fileId){
+        return fileId?`${window.location.origin}${Constansts.fileIdServeUrl}/${fileId}`:this.getFileServeUrl("/__.ai")
+    },
     setLoginCookie(userId, loginInfo) {
         cookies.config("2d");
         cookies.set("userId", userId);
@@ -35,6 +38,15 @@ export default {
             }
         }
         return val
+    },
+    getUUID() {
+        var dt = new Date().getTime();
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (dt + Math.random() * 16) % 16 | 0;
+            dt = Math.floor(dt / 16);
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+        });
+        return uuid;
     },
     isUserSessionActive(){
         return this.getCookieValue("userId")?true:false

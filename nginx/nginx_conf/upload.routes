@@ -1,0 +1,34 @@
+client_max_body_size 30G;
+
+location ~ ^/resumableUpload(/.*)?$  {
+
+    # Pass altered request body to this location on completion
+    upload_pass /upload;
+
+    # Store files to directory specified in request url using $1
+    upload_store $1;
+    # Allow uploaded files to be readable-writable by everyone
+    upload_store_access user:rw group:rw all:rw;
+
+    # Enable resumable upload
+    upload_resumable on;
+    #upload_state_store /tmp/nginx_upload_cache;
+
+    add_header X-debug-message "Upload Directory: $1" always;
+
+    # Set specified fields in request body
+    upload_set_form_field $upload_field_name.name "$upload_file_name";
+    upload_set_form_field $upload_field_name.content_type "$upload_content_type";
+    upload_set_form_field $upload_field_name.path "$upload_tmp_path";
+
+    # Inform backend about size of the file
+    upload_aggregate_form_field "$upload_field_name.size" "$upload_file_size";
+
+    # Specify fields passed to backend from original request body
+    upload_pass_form_field "^submit$|^description$";
+    upload_pass_form_field "^Dst-Path$";
+    upload_pass_form_field "^Session-Id$";
+
+    # Delete partially uploaded on http error codes
+    upload_cleanup 400 404 499 500-505;
+}
