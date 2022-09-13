@@ -17,7 +17,7 @@
       <v-container>
         <v-row dense>
           <v-col class="mr-12 mb-12" v-for="file in files" :key="file._id">
-            <v-card class="mx-auto vcard_scroll" width="238px" height="380px">
+            <v-card class="mx-auto vcard_scroll" width="238px" height="380px" @dblclick="openFile(file)">
               <v-img
                 class="align-end text-white"
                 height="200"
@@ -53,6 +53,22 @@
     </div>
   </v-list-item>
   </v-list>
+  <v-dialog
+    v-model="dialog"
+    fullscreen
+    :scrim="false"
+    transition="dialog-bottom-transition"
+  >
+  <v-card>
+      <v-toolbar :title="alikhUtils.capitalizeFirstLetter(selectedFile.name)" dark color="primary">
+        <v-btn icon dark @click="closeFile">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <iframe id="fred" style="border:1px solid #666CCC" :title="alikhUtils.capitalizeFirstLetter(selectedFile.name)" :src="alikhUtils.getFileServeUrl(selectedFile.pdf_path)" frameborder="1" height="100%" width="100%"  scrolling="auto"></iframe>
+      
+  </v-card>
+</v-dialog>
   </div>
 </template>
 
@@ -66,7 +82,8 @@ export default {
       alikhUtils,
       page: 1,
       totalPages: -1,
-      search:null
+      search:null,
+      dialog:false
     };
   },
   watch: {
@@ -85,6 +102,15 @@ export default {
     },
   },
   methods: {
+    openFile(file){
+      this.dialog = true
+      this.selectedFile = {}
+      Object.assign(this.selectedFile, file)
+    },
+    closeFile(){
+      this.dialog = false
+      this.selectedFile = {}
+    },
     clearSearch(){
       this.search=null
       this.getFilesFromServer()

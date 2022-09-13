@@ -52,7 +52,11 @@ export default {
         return this.getCookieValue("userId")?true:false
     },
     capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+        try {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        } catch  {
+            return string
+        }
     },
     getToastNotificationOptions() {
         //Visit https://maronato.github.io/vue-toastification/ for customization
