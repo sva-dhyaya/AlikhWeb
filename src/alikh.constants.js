@@ -9,6 +9,7 @@ export default {
     fileServeUrl: `${extended_url}/serve/file`,
     fileIdServeUrl: `${extended_url}/serve/fileid`,
     filesUrl: `${extended_url}/files`,
+    defaultMetadataUrl: `${extended_url}/defaults/metadata`,
     usersUrl: `${extended_url}/users`,
     nginxUploadUrl: `/resumableUpload`,
     defaultToastTime: 3000,

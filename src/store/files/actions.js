@@ -27,6 +27,15 @@ export default {
         let resp = await requesthandler.put(`${alikhConstants.filesUrl}/${payload._id}/restore`, payload)
         return resp
     },
+
+    async storeDefaultMetadataDropdowns(context, payload) {
+        let resp = await requesthandler.get(alikhConstants.defaultMetadataUrl, payload)
+        if (resp.httpSuccess){
+            context.state.defaultMetadataDropdowns = {}
+            Object.assign(context.state.defaultMetadataDropdowns, resp)
+        }
+        return resp
+    },
     
 
 

@@ -71,6 +71,7 @@
 <script>
 import alikhUtils from "@/alikh.utils";
 import logo from "../assets/logo.jpg";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -145,9 +146,11 @@ export default {
       alikhUtils.unsetLoginCookie();
       this.$router.push({ name: "home" });
     },
+    ...mapActions("files",["storeDefaultMetadataDropdowns"])
   },
   created() {
     this.$router.push({ name: "dashboard" });
+    this.storeDefaultMetadataDropdowns({})
   },
 };
 </script>

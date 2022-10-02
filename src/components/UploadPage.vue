@@ -334,7 +334,7 @@
                   <p>Category</p>
                   <v-select
                     v-model="metadata.category"
-                    :items="categoryItems"
+                    :items="metadataDropdowns.categoryItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -346,7 +346,7 @@
                   <p>Industry</p>
                   <v-select
                     v-model="metadata.industry_type"
-                    :items="industryItems"
+                    :items="metadataDropdowns.industryItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -371,7 +371,7 @@
                   <p>Primary Character</p>
                   <v-select
                     v-model="metadata.character_info.primary"
-                    :items="CharaterItems"
+                    :items="metadataDropdowns.CharaterItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -397,7 +397,7 @@
                   <p>Language</p>
                   <v-select
                     v-model="metadata.langauge"
-                    :items="langaugeItems"
+                    :items="metadataDropdowns.langaugeItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -409,7 +409,7 @@
                   <p>Location</p>
                   <v-select
                     v-model="metadata.location"
-                    :items="locationItems"
+                    :items="metadataDropdowns.locationItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -421,7 +421,7 @@
                   <p>Age</p>
                   <v-select
                     v-model="metadata.age"
-                    :items="ageItems"
+                    :items="metadataDropdowns.ageItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -433,7 +433,7 @@
                   <p>Ethnicity</p>
                   <v-select
                     v-model="metadata.ethnicity"
-                    :items="ethnicityItems"
+                    :items="metadataDropdowns.ethnicityItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -445,7 +445,7 @@
                   <p>Look</p>
                   <v-select
                     v-model="metadata.look"
-                    :items="lookItems"
+                    :items="metadataDropdowns.lookItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -457,7 +457,7 @@
                   <p>Continental</p>
                   <v-select
                     v-model="metadata.continental"
-                    :items="continentalItems"
+                    :items="metadataDropdowns.continentalItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -469,7 +469,7 @@
                   <p>BG Colours</p>
                   <v-select
                     v-model="metadata.bg_color"
-                    :items="bg_colorItems"
+                    :items="metadataDropdowns.bg_colorItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -481,7 +481,7 @@
                   <p>Emoji</p>
                   <v-select
                     v-model="metadata.emojis"
-                    :items="emojisItems"
+                    :items="metadataDropdowns.emojisItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -493,7 +493,7 @@
                   <p>Country</p>
                   <v-select
                     v-model="metadata.country"
-                    :items="countryItems"
+                    :items="metadataDropdowns.countryItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -505,7 +505,7 @@
                   <p>Character Posture</p>
                   <v-select
                     v-model="metadata.character_posture"
-                    :items="character_postureItems"
+                    :items="metadataDropdowns.character_postureItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -517,7 +517,7 @@
                   <p>Character Colors</p>
                   <v-select
                     v-model="metadata.character_colour"
-                    :items="character_colourItems"
+                    :items="metadataDropdowns.character_colourItems"
                     item-title="value"
                     label="Select"
                     persistent-hint
@@ -561,7 +561,7 @@
 <script>
 import alikhUtils from "@/alikh.utils";
 import FileUploader from "@/plugins/fileUploader";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   //   watch:{
@@ -572,9 +572,10 @@ export default {
   //     }
   //   },
   computed: {
+    ...mapGetters("files", ["metadataDropdowns"]),
     secondayCharaterItems() {
       let primaryCharVal = `${this.metadata.character_info.primary.value}`;
-      return this.CharaterItems.filter((char) => char.value != primaryCharVal);
+      return this.metadataDropdowns.CharaterItems.filter((char) => char.value != primaryCharVal);
     },
   },
   methods: {
@@ -596,7 +597,8 @@ export default {
       this.dialog = false;
       let payload = {
         _id: this.fileUid,
-        metadata:{}
+        metadata:{},
+        is_character: this.isCharacter.value == 'Yes'?true:false
       }
       this.parseMetadata()
       Object.assign(payload.metadata, this.metadata)
@@ -608,27 +610,6 @@ export default {
         }
       })
     },
-    // saveUploadedFile() {
-    //   this.dialog = false;
-    //   var reader = new FileReader()
-    //   reader.readAsDataURL(this.uploadedFile[0])
-    //   reader.onload = () => {
-    //       let payload = {
-    //         base64_upload: reader.result,
-    //         file_name: this.uploadedFile[0].name,
-    //         metadata:{}
-    //       }
-    //       this.parseMetadata()
-    //       Object.assign(payload.metadata, this.metadata)
-    //       this.createFile(payload).then((data)=>{
-    //         if(data.httpSuccess){
-    //           alikhUtils.successToast(`${this.uploadedFile[0].name} Successfully Uploaded`)
-    //         }else{
-    //           alikhUtils.failToast(`Failed to Upload ${this.uploadedFile[0].name}`)
-    //         }
-    //       })
-    //   };
-    // },
     dsicardUploadedFile() {
       this.dialog = false;
       let payload = {
@@ -670,195 +651,6 @@ export default {
       metadata: { character_info: { primary: {value:"Male"}, secondary: {value: "Female" }} },
       isCharacterItems: [{ value: "Yes" }, { value: "No" }],
       //   secondayCharaterItems:[],
-      categoryItems: [
-        { value: "Fashion" },
-        { value: "Professional" },
-        { value: "Casual" },
-        { value: "Art and Craft" },
-        { value: "Robotics" },
-        { value: "Science and Technology" },
-        { value: "Social Media" },
-        { value: "Industrial and Scientific" },
-        { value: "Beauty and Personal Care" },
-        { value: "Event Networking" },
-      ],
-      industryItems: [
-        { value: "Medical and Health" },
-        { value: "Beauty and cosmetic" },
-        { value: "Food, Beverages and Restaurant" },
-        { value: "Accounting and Finance" },
-        { value: "Advertising, media and publishing" },
-        { value: "Agriculture and farming" },
-        { value: "Animal, pets and Zoology" },
-        { value: "Arts and culture" },
-        { value: "Business and marketing" },
-        { value: "Construction" },
-        { value: "Education" },
-        { value: "Engineering" },
-      ],
-      CharaterItems: [
-        { value: "Male" },
-        { value: "Female" },
-        { value: "Transgender" },
-        { value: "Group of people" },
-        { value: "All" },
-        { value: "No Preference" },
-        { value: "Children" },
-        { value: "Boy" },
-        { value: "Girl" },
-        { value: "Men" },
-        { value: "Women" },
-        { value: "Babies" },
-        { value: "Others" },
-      ],
-      langaugeItems: [
-        { value: "English" },
-        { value: "Japanese" },
-        { value: "Chinese" },
-        { value: "Spanish" },
-        { value: "Hindi" },
-        { value: "Tamil" },
-        { value: "Telugu" },
-        { value: "Marathi" },
-        { value: "Kannada" },
-        { value: "British English" },
-        { value: "Others" },
-      ],
-      locationItems: [
-        { value: "Office" },
-        { value: "Home" },
-        { value: "Open Space" },
-        { value: "Park" },
-        { value: "Hospital" },
-        { value: "Road" },
-        { value: "Natural Scene" },
-        { value: "Cartoon Scene" },
-        { value: "Others" },
-      ],
-      ageItems: [
-        { value: "Kids - 0 to 5" },
-        { value: "School-aged - 6 to 13" },
-        { value: "Teen - 14 to 18" },
-        { value: "Adults - 19 to 60" },
-        { value: "Matured - 32 above" },
-        { value: "Aged - 60 above" },
-        { value: "Others" },
-      ],
-      ethnicityItems: [
-        { value: "Asian" },
-        { value: "American" },
-        { value: "Jewish" },
-        { value: "African" },
-        { value: "Black African" },
-        { value: "British" },
-        { value: "Asian British" },
-        { value: "Asian Scottish" },
-        { value: "Bangladeshi" },
-        { value: "Indian" },
-        { value: "Chinese" },
-        { value: "Pakistani" },
-        { value: "African British" },
-        { value: "Others" },
-      ],
-      lookItems: [
-        { value: "Corporate" },
-        { value: "Casual" },
-        { value: "Modern" },
-        { value: "Formal" },
-        { value: "Traditional" },
-      ],
-      continentalItems: [
-        { value: "Asia" },
-        { value: "Europe" },
-        { value: "Africa" },
-        { value: "Antartica" },
-        { value: "Australia/Oceania" },
-        { value: "North America" },
-        { value: "South America" },
-      ],
-      bg_colorItems: [
-        { value: "Bright" },
-        { value: "Dull" },
-        { value: "Day" },
-        { value: "Night" },
-        { value: "Solid" },
-        { value: "Wallpaper" },
-        { value: "Pastel" },
-        { value: "Pastel Rainbow" },
-        { value: "Gradient" },
-        { value: "Rainbow Watercolours" },
-        { value: "Unicom" },
-        { value: "Tie Dye" },
-        { value: "Cartoon Wallpaper" },
-        { value: "Pastel Geometric Wallpaper" },
-      ],
-      emojisItems: [
-        { value: "Happy" },
-        { value: "Sad" },
-        { value: "Surprise" },
-        { value: "Crying" },
-        { value: "Slightly Smiling Face" },
-        { value: "Laughing with Tears" },
-        { value: "Upsidedown Face" },
-        { value: "Smiling Face" },
-        { value: "Smiling Face with Big" },
-        { value: "Smiling Face with Tears" },
-        { value: "Smiling Face with Halo" },
-        { value: "Face with Monocle" },
-        { value: "Partying Face" },
-      ],
-      countryItems: [
-        { value: "India" },
-        { value: "Africa" },
-        { value: "China" },
-        { value: "Japan" },
-        { value: "France" },
-        { value: "Finland" },
-        { value: "Italy" },
-        { value: "Spain" },
-        { value: "Korea" },
-        { value: "USA" },
-        { value: "Russia" },
-        { value: "Britain" },
-        { value: "Mexico" },
-        { value: "Australia" },
-        { value: "Sri Lanka" },
-      ],
-      character_postureItems: [
-        { value: "Standing" },
-        { value: "Walking" },
-        { value: "Sleeping" },
-        { value: "Bending" },
-        { value: "Sitting" },
-        { value: "Lift Right Hand Straight" },
-        { value: "Lift Left Hand Straight" },
-        { value: "Lift Right Leg Straight" },
-        { value: "Lift Left Leg Straight" },
-        { value: "Lift Right Hand Up" },
-        { value: "Lift Left Hand Up" },
-        { value: "Lift Right Leg Up" },
-        { value: "Lift Left Leg Up" },
-        { value: "Head Turn Left" },
-        { value: "Head Turn Right" },
-      ],
-      character_colourItems: [
-        { value: "American White" },
-        { value: "American Black" },
-        { value: "African" },
-        { value: "Indian White" },
-        { value: "Indian Black" },
-        { value: "Wheatish Brown" },
-        { value: "Brown" },
-        { value: "Fair" },
-        { value: "Medium White" },
-        { value: "Dark Brown" },
-        { value: "Moderate Brown" },
-        { value: "Olive" },
-        { value: "Light Brown" },
-        { value: "Moderate White" },
-        { value: "Blue Black" },
-        { value: "Others" },
-      ],
       dialog: false,
       notifications: false,
       sound: true,
@@ -982,7 +774,7 @@ form#upload_form .ques a {
   text-decoration: none;
 }
 .ques {
-  background-color: #fec245;
+  background-color: #c0c4cd;
   padding: 10px;
   border-radius: 10px;
   cursor: pointer;

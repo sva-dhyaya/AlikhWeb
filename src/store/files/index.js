@@ -5,7 +5,9 @@ import Getters from "./getters.js";
 export default {
     namespaced: true,
     state() {
-        return {};
+        return {
+            defaultMetadataDropdowns: {}
+        };
     },
     mutations: Mutations,
     actions: Actions,

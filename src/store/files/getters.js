@@ -1,1 +1,5 @@
-export default {}
+export default {
+    metadataDropdowns(state){
+        return state.defaultMetadataDropdowns
+    }
+}
